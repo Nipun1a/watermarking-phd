@@ -1,0 +1,163 @@
+# Deep Learning-Based Image Watermarking: A Comprehensive Review
+
+*(Draft PhD Review Document)*
+
+---
+
+## **1. Introduction**
+
+Digital watermarking is a technique used to embed hidden information into multimedia content such as images, audio, or video, without significantly affecting perceptual quality. Its main objectives include copyright protection, authentication, and tamper detection. Traditional watermarking techniques relied heavily on signal processing approaches like DCT, DWT, and SVD. However, these approaches face limitations such as vulnerability to attacks, limited capacity, and poor adaptability.
+
+With the advancement of deep learning, new neural watermarking frameworks have emerged, offering improved robustness, higher capacity, and better invisibility. In this review, we analyze a deep-learning-based image watermarking method consisting of an **Encoder (Embedder)**, **Decoder (Extractor)**, and **Training Strategy** optimized using perceptual and reconstruction losses.
+
+---
+
+## **2. Background and Related Work**
+
+### **2.1 Traditional Watermarking Methods**
+
+* **Spatial Domain Methods**: LSB, patch-based embedding
+* **Frequency Domain Methods**: DWT, DCT, SVD, DWT+DCT hybrid
+* **Issues:** Limited robustness, low capacity, easy to remove using simple image attacks
+
+### **2.2 Deep Learning-Based Watermarking**
+
+Deep models learn to embed high-capacity watermarks while keeping the host image visually unchanged.
+Popular models include:
+
+* **HiDDeN** (ECCV 2018)
+* **RivaGAN** (ICLR 2020)
+* **UDH** (Universal Deep Hiding, CVPR 2020)
+* **Robust Invisible Watermarking using Diffusion Models (2023)**
+
+Your model follows the **HiDDeN-style architecture** with improvements.
+
+---
+
+## **3. Problem Definition**
+
+Given an image (I) and a binary watermark bit sequence (W), the objective is to learn two networks:
+
+* **Embedder E(I, W) → I_w**: produces a watermarked image
+* **Extractor D(I_w) → W'**: predicts the watermark bits from the watermarked or attacked image
+
+The optimization goal:
+
+* **Keep (I_w) visually identical to (I)**
+* **Maximize accuracy of extracting W even after distortions**
+
+---
+
+## **4. Model Architecture**
+
+### **4.1 Embedder (Encoder Network)**
+
+* Takes an image and watermark bit-map.
+* Uses convolutional layers to learn feature representations.
+* Injects watermark into multi-level feature maps.
+* Reconstructs the final watermarked image.
+
+### **4.2 Extractor (Decoder Network)**
+
+* Takes the watermarked image and tries to recover the bit-map.
+* Outputs probability values for each bit (processed via Sigmoid).
+
+### **4.3 Noise Layers (Optional)**
+
+To increase robustness, random distortions may be applied:
+
+* JPEG compression
+* Gaussian noise
+* Cropping
+* Blurring
+* Resize attacks
+
+These layers simulate real-world attacks during training.
+
+---
+
+## **5. Loss Functions**
+
+### **5.1 Image Loss (L2 Loss / MSE)**
+
+Ensures the watermarked image remains visually identical to the original.
+
+### **5.2 Binary Cross-Entropy Loss (BCE)**
+
+Used for watermark extraction accuracy.
+
+### **5.3 Total Loss**
+
+[
+\mathcal{L} = \lambda_{img} L_{img} + \lambda_{wm} L_{wm}
+]
+Where:
+
+* (L_{img}): MSE between original and watermarked image
+* (L_{wm}): BCE for watermark bit error
+
+---
+
+## **6. Training Procedure**
+
+1. Load a batch of clean images
+2. Generate random watermark bit sequences
+3. Pass both to the **Embedder** → produce watermarked image
+4. Apply optional **noise/attacks**
+5. Pass attacked image to **Extractor** → predict watermark bits
+6. Compute losses
+7. Backpropagate jointly for both networks
+8. Repeat for several epochs
+
+---
+
+## **7. Evaluation Metrics**
+
+Two major metrics are used in image watermarking:
+
+### **7.1 PSNR (Peak Signal-to-Noise Ratio)**
+
+Measures similarity between original and watermarked image.
+
+* **Higher PSNR = better invisibility**
+* Above **35 dB** is considered excellent
+
+### **7.2 SSIM (Structural Similarity Index)**
+
+Measures structural similarity.
+
+* **Closer to 1 = better quality**
+
+### **7.3 Bit Accuracy / BER (Bit Error Rate)**
+
+Measures watermark extraction reliability.
+
+---
+
+## **8. Applications**
+
+* Copyright protection
+* Media forensics
+* Content authentication
+* Watermarking in streaming platforms
+* Satellite / medical image integrity
+
+---
+
+## **9. Limitations**
+
+* Deep models require large training time
+* Vulnerable to extreme distortions if not trained robustly
+* High-capacity embedding may reduce image quality
+
+---
+
+## **10. Conclusion**
+
+The presented watermarking architecture demonstrates a modern deep-learning approach capable of embedding high-capacity, invisible, and robust watermarks. With joint optimization, CNN encoders and decoders outperform traditional approaches significantly in robustness and imperceptibility.
+
+This review provides the basis for a full PhD-level survey on deep-learning watermarking, covering theory, challenges, architecture, training, and evaluation metrics.
+
+---
+
+*(You can request further additions: literature survey expansion, block diagrams, mathematical derivations, implementation chapter, experiment results, tables, or future scope.)*
